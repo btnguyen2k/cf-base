@@ -6,6 +6,17 @@ const (
 	SiteModeBlog     = "blog"
 )
 
-var (
-	AllSiteModes = []string{SiteModeDocument, SiteModeBlog}
-)
+// IsValidSiteMode reports whether mode is supported.
+func IsValidSiteMode(mode string) bool {
+	switch mode {
+	case SiteModeDocument, SiteModeBlog:
+		return true
+	default:
+		return false
+	}
+}
+
+// SiteModes returns all supported site modes.
+func SiteModes() []string {
+	return []string{SiteModeDocument, SiteModeBlog}
+}

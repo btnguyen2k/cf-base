@@ -50,7 +50,7 @@ func (sm *SiteMeta) init() error {
 
 	// verify "site-mode"
 	ok := false
-	for _, mode := range AllSiteModes {
+	for _, mode := range SiteModes() {
 		if mode == sm.Mode {
 			ok = true
 			break
