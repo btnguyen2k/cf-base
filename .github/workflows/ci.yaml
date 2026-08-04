@@ -12,7 +12,8 @@ permissions:
   contents: read
 
 env:
-  TAG_PREFIX: v
+  TAG_PREFIX: "v"
+  GO_VERSION: "1.18.x"
 
 jobs:
   BuildAndTest:
@@ -21,20 +22,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ "1.18", "oldstable", "stable" ]
-
+        go-version: [ ${{ env.GO_VERSION }}, "oldstable", "stable" ]
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
-
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.go-version }}
-
       - name: Build
         run: go build ./...
-
       - name: Test with coverage
         run: go test -covermode=atomic -coverprofile=coverage.out ./...
       - name: Test with coverage (module_test)
@@ -42,7 +39,6 @@ jobs:
           cd module_test \
           && go test -covermode=atomic -coverprofile=../coverage_module_test.out -coverpkg=github.com/btnguyen2k/cf-base ./... \
           && cd ..
-
       - name: Codecov
         uses: codecov/codecov-action@v7
         with:
@@ -53,22 +49,34 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  LintAndFormat:
-    name: Lint and format (Go 1.18)
+  GoModTidy:
+    name: Check go mod tidy
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
-
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
-          go-version: "1.18.x"
+          go-version: ${{ env.GO_VERSION }}
+      - name: Check module files
+        working-directory: .
+        run: |
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
 
+  LintAndFormat:
+    name: Lint and format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
       - name: Lint
         run: go vet ./...
-
       - name: Check formatting
         run: |
           go fmt ./...
