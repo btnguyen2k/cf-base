@@ -13,7 +13,7 @@ permissions:
 
 env:
   TAG_PREFIX: "v"
-  GO_VERSION: "1.18.x"
+  GO_VERSION: &go-version "1.18.x"
 
 jobs:
   BuildAndTest:
@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ ${{ env.GO_VERSION }}, "oldstable", "stable" ]
+        go-version: [ *go-version, "oldstable", "stable" ]
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
