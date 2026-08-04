@@ -187,10 +187,7 @@ func LoadSiteMetaFromYaml(filePath string) (*SiteMeta, error) {
 	err = yaml.Unmarshal(buf, &metadata)
 	if err == nil {
 		metadata.FileInfo = fi
-		metadata.init()
-		// if strings.ToLower(os.Getenv("CLI")) == "true" {
-		// 	gSiteMeta = metadata
-		// }
+		err = metadata.init()
 	}
 	return metadata, err
 }
@@ -209,10 +206,7 @@ func LoadSiteMetaFromJson(filePath string) (*SiteMeta, error) {
 	err = json.Unmarshal(buf, &metadata)
 	if err == nil {
 		metadata.FileInfo = fi
-		metadata.init()
-		// if strings.ToLower(os.Getenv("CLI")) == "true" {
-		// 	gSiteMeta = metadata
-		// }
+		err = metadata.init()
 	}
 	return metadata, err
 }
