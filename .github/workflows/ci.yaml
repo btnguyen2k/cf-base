@@ -66,7 +66,7 @@ jobs:
           go fmt ./...
           git diff --exit-code
 
-ReleaseDryRun:
+  ReleaseDryRun:
     if: github.event_name == 'push'
     needs: [ BuildAndTest ]
     runs-on: ubuntu-latest
