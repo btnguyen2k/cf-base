@@ -37,13 +37,18 @@ jobs:
 
       - name: Test with coverage
         run: go test -covermode=atomic -coverprofile=coverage.out ./...
+      - name: Test with coverage (module_test)
+        run: |
+          cd module_test \
+          && go test -covermode=atomic -coverprofile=../coverage_module_test.out -coverpkg=github.com/btnguyen2k/cf-base ./... \
+          && cd ..
 
       - name: Codecov
         uses: codecov/codecov-action@v7
         with:
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.out
+          files: ./coverage.out, ./coverage_module_test.out
           flags: go-${{ matrix.go-version }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
