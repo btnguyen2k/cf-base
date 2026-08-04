@@ -1,15 +1,18 @@
-name: 'ci'
+name: "ci"
 
 on:
   push:
-    branches: [ '*' ]
+    branches: [ "*" ]
   pull_request:
     types: [ opened, edited, reopened, synchronize, review_requested ]
-    branches: [ '*' ]
+    branches: [ "*" ]
   workflow_call:
 
 permissions:
   contents: read
+
+env:
+  TAG_PREFIX: v
 
 jobs:
   BuildAndTest:
@@ -18,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ '1.18', 'oldstable', 'stable' ]
+        go-version: [ "1.18", "oldstable", "stable" ]
 
     steps:
       - name: Check out repository
@@ -56,7 +59,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
-          go-version: '1.18.x'
+          go-version: "1.18.x"
 
       - name: Lint
         run: go vet ./...
@@ -67,7 +70,7 @@ jobs:
           git diff --exit-code
 
   ReleaseDryRun:
-    if: github.event_name == 'push'
+    if: github.event_name == "push"
     needs: [ BuildAndTest ]
     runs-on: ubuntu-latest
     outputs:
@@ -80,7 +83,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
       - name: Release (dry-run)
         id: release_dry_run
         uses: btnguyen2k/action-semrelease@v4
