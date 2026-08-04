@@ -33,6 +33,9 @@ func (sm *SiteMeta) init() error {
 	if _, exists := sm.Languages["default"]; exists {
 		languageCount--
 	}
+	if languageCount == 0 {
+		return fmt.Errorf("at least one language must be configured")
+	}
 	if defaultLang == "" {
 		if languageCount != 1 {
 			return fmt.Errorf("languages.default is required when multiple languages are configured")
@@ -184,12 +187,18 @@ func LoadSiteMetaFromYaml(filePath string) (*SiteMeta, error) {
 		return nil, err
 	}
 	var metadata *SiteMeta
-	err = yaml.Unmarshal(buf, &metadata)
-	if err == nil {
-		metadata.FileInfo = fi
-		err = metadata.init()
+	if err := yaml.Unmarshal(buf, &metadata); err != nil {
+		return nil, err
 	}
-	return metadata, err
+	if metadata == nil {
+		return nil, fmt.Errorf("site metadata file %q is empty or null", filePath)
+	}
+
+	metadata.FileInfo = fi
+	if err := metadata.init(); err != nil {
+		return nil, err
+	}
+	return metadata, nil
 }
 
 // LoadSiteMetaFromJson loads site metadata from a JSON file.
@@ -203,10 +212,16 @@ func LoadSiteMetaFromJson(filePath string) (*SiteMeta, error) {
 		return nil, err
 	}
 	var metadata *SiteMeta
-	err = json.Unmarshal(buf, &metadata)
-	if err == nil {
-		metadata.FileInfo = fi
-		err = metadata.init()
+	if err := json.Unmarshal(buf, &metadata); err != nil {
+		return nil, err
 	}
-	return metadata, err
+	if metadata == nil {
+		return nil, fmt.Errorf("site metadata file %q is empty or null", filePath)
+	}
+
+	metadata.FileInfo = fi
+	if err := metadata.init(); err != nil {
+		return nil, err
+	}
+	return metadata, nil
 }
