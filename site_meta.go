@@ -28,14 +28,25 @@ type SiteMeta struct {
 
 func (sm *SiteMeta) init() error {
 	// init field "default language"
-	defLang := sm.Languages["default"]
-	if defLang == "" {
-		for lang := range sm.Languages {
-			defLang = lang
-			break
-		}
+	defaultLang := sm.Languages["default"]
+	languageCount := len(sm.Languages)
+	if _, exists := sm.Languages["default"]; exists {
+		languageCount--
 	}
-	sm.DefaultLanguage = defLang
+	if defaultLang == "" {
+		if languageCount != 1 {
+			return fmt.Errorf("languages.default is required when multiple languages are configured")
+		}
+		for lang := range sm.Languages {
+			if lang != "default" {
+				defaultLang = lang
+				break
+			}
+		}
+	} else if _, exists := sm.Languages[defaultLang]; !exists {
+		return fmt.Errorf("default language %q is not configured", defaultLang)
+	}
+	sm.DefaultLanguage = defaultLang
 
 	// verify "site-mode"
 	ok := false
@@ -64,7 +75,6 @@ func (sm *SiteMeta) init() error {
 	return nil
 }
 
-// ToMap returns the site metadata as a map.
 func (sm *SiteMeta) ToMap() map[string]any {
 	return map[string]any{
 		"name":            sm.Name,
