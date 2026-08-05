@@ -1,9 +1,14 @@
 package cfbase
 
 const (
-	DefaultSiteMode  = SiteModeDocument
+	// DefaultSiteMode is the mode used when no valid mode is configured.
+	DefaultSiteMode = SiteModeDocument
+
+	// SiteModeDocument identifies a documentation site.
 	SiteModeDocument = "document"
-	SiteModeBlog     = "blog"
+
+	// SiteModeBlog identifies a blog site.
+	SiteModeBlog = "blog"
 )
 
 // IsValidSiteMode reports whether mode is supported.

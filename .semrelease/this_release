@@ -4,3 +4,4 @@
 #!VERSION=1.0.0
 - add: Author struct.
 - add: SiteMeta class.
+- add: TopicMeta class.

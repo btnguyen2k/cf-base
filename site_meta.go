@@ -13,7 +13,7 @@ import (
 
 // SiteMeta captures metadata of the website.
 type SiteMeta struct {
-	FileInfo        os.FileInfo       `json:"-" yaml:"-"`                                   // internal use only!
+	fileInfo        os.FileInfo       `json:"-" yaml:"-"`                                   // internal use only!
 	Name            string            `json:"name" yaml:"name"`                             // name of the website
 	Description     any               `json:"description" yaml:"description"`               // short description, can be a single string, or a map[language-code:string]string
 	Languages       map[string]string `json:"languages" yaml:"languages"`                   // available languages of the website content
@@ -78,6 +78,7 @@ func (sm *SiteMeta) init() error {
 	return nil
 }
 
+// ToMap returns the site metadata as a map.
 func (sm *SiteMeta) ToMap() map[string]any {
 	return map[string]any{
 		"name":            sm.Name,
@@ -91,8 +92,6 @@ func (sm *SiteMeta) ToMap() map[string]any {
 		"author":          sm.Author,
 	}
 }
-
-var _typMapString = reflect.TypeOf(map[string]string{})
 
 // GetDescriptionMap returns the site description keyed by language code.
 func (sm *SiteMeta) GetDescriptionMap() map[string]string {
@@ -110,8 +109,6 @@ func (sm *SiteMeta) GetDescriptionMap() map[string]string {
 	}
 	return desc
 }
-
-var _typMapAny = reflect.TypeOf(map[string]any{})
 
 // GetTagAliasMap returns tag aliases grouped by language code and tag.
 func (sm *SiteMeta) GetTagAliasMap() map[string]map[string][]string {
@@ -194,7 +191,7 @@ func LoadSiteMetaFromYaml(filePath string) (*SiteMeta, error) {
 		return nil, fmt.Errorf("site metadata file %q is empty or null", filePath)
 	}
 
-	metadata.FileInfo = fi
+	metadata.fileInfo = fi
 	if err := metadata.init(); err != nil {
 		return nil, err
 	}
@@ -219,7 +216,7 @@ func LoadSiteMetaFromJson(filePath string) (*SiteMeta, error) {
 		return nil, fmt.Errorf("site metadata file %q is empty or null", filePath)
 	}
 
-	metadata.FileInfo = fi
+	metadata.fileInfo = fi
 	if err := metadata.init(); err != nil {
 		return nil, err
 	}
