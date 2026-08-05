@@ -123,11 +123,11 @@ func (sm *SiteMeta) GetTagAliasMap() map[string]map[string][]string {
 	}
 
 	var nextLevelKind reflect.Kind
-	for _, v := range outer.(map[string]interface{}) {
+	for _, v := range outer.(map[string]any) {
 		if v != nil {
 			nextLevelKind = reflect.TypeOf(v).Kind()
+			break
 		}
-		break
 	}
 	switch nextLevelKind {
 	case reflect.Array, reflect.Slice:
