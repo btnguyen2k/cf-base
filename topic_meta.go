@@ -23,9 +23,9 @@ type TopicMeta struct {
 	// DefaultLanguage is the default language inherited from the containing site.
 	DefaultLanguage string `json:"def_lang" yaml:"def_lang"`
 	// Title is either a string or a map of language codes to titles.
-	Title interface{} `json:"title" yaml:"title"`
+	Title any `json:"title" yaml:"title"`
 	// Description is either a string or a map of language codes to descriptions.
-	Description interface{} `json:"description,omitempty" yaml:"description,omitempty"`
+	Description any `json:"description,omitempty" yaml:"description,omitempty"`
 	// Icon is the location of the topic icon.
 	Icon string `json:"icon,omitempty" yaml:"icon,omitempty"`
 	// EntryImage is the location of the topic's entry image.
@@ -46,8 +46,8 @@ func (tm *TopicMeta) setDirectory(dir string) bool {
 }
 
 // ToMap returns a map representation of the topic metadata.
-func (tm *TopicMeta) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+func (tm *TopicMeta) ToMap() map[string]any {
+	return map[string]any{
 		"id":          tm.id,
 		"num_docs":    tm.numDocs,
 		"icon":        tm.Icon,
