@@ -5,3 +5,4 @@
 - add: Author struct.
 - add: SiteMeta class.
 - add: TopicMeta class.
+- add: DocumentMeta class.
