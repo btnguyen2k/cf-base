@@ -1,0 +1,65 @@
+name: ContentFlow # (string) site's name
+description:
+  # (string, or map[language-code]text)
+  en: Content Management System where its content is built through CI/CD pipeline
+  vi: Hệ thống Quản trị nội dung với dữ liệu được xây dựng thông qua qui trình CI/CD
+icon: fas fa-code # (string) supporting FontAwesome icons
+languages:
+  # (map[language-code]text) available languages
+  en: English
+  vi: Tiếng Việt
+  default: en # default language
+contacts:
+  # (map[string]string) site's contact info
+  website: "https://github.com/btnguyen2k/docms"
+  email: "btnguyen2k (at) gmail (dot) com"
+  github: "https://github.com/btnguyen2k/"
+  facebook: ""
+  linkedin: "https://www.linkedin.com/in/btnguyen2k/"
+  slack: ""
+  twitter: ""
+  discord: ""
+tags:
+  # (map[string]any)
+  # allowed placeholders are ${build_date}, ${build_time} and ${build_datetime}
+  # placeholder will be populated by DOCLI
+  # - build_date    : YYYYMMDD
+  # - build_time    : HHmmss
+  # - build_datetime: YYYYMMDDHHmmss
+  build: ${build_datetime}
+  demo:
+    tag1:
+      key1: value 1
+      key2: value 2
+    tag2: [1, "2", true]
+    tag3: this tag _content_ has **markdown**
+tagalias:
+  # (map[language-code]map[string]Array(string))
+  en:
+    cms: [content management, content management system, docms, do cms]
+    ci/cd: [cicd, ci cd, ci-cd]
+    localhost: [local]
+    docli: [cli]
+    pre-processing: [process, processing]
+    fulltext: [fti, fulltext index, full text index, index, search, fulltext search, full text search]
+    do cms runtime: [runtime]
+    metadata: [meta]
+    maths: [math, mathematical, mathematics]
+    chem: [chemical, chemistry]
+    formulas: [formula]
+    icons: [icon]
+    website: [site]
+    code highlighting: [code, highlight, code highlight, highlighting]
+  vi:
+    cms: [quản trị nội dung, hệ thống quản trị nội dung, quản lý nội dung, hệ thống quản lý nội dung, docms, do cms]
+    ci/cd: [cicd, ci cd, ci-cd]
+    localhost: [local]
+    docli: [cli]
+    tiền xử lý: [xử lý]
+    toàn văn: [fti, fulltext index, full text index, index, tìm kiếm, tìm kiếm toàn văn, toàn văn, chỉ mục, chỉ mục toàn văn, toàn văn chỉ mục]
+    do cms runtime: [runtime]
+    metadata: [meta]
+    toán học: [toán]
+    hoá học: [hoá]
+    trang web: [trang, web]
+    code highlighting: [code, highlight, code highlight, highlighting]
