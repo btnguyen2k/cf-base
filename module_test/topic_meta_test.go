@@ -108,8 +108,8 @@ func TestLoadTopicMetaFromTestData(t *testing.T) {
 	}
 
 	wantDescriptions := map[string]string{
-		"en": "An introduction of DO CMS: what it is and how it work.",
-		"vi": "Giới thiệu về DO CMS: tổng quan và cách thức hoạt động.",
+		"en": "An introduction of ContentFlow: what it is and how it work.",
+		"vi": "Giới thiệu về ContentFlow: tổng quan và cách thức hoạt động.",
 	}
 	if got := meta.GetDescriptionMap(); !reflect.DeepEqual(got, wantDescriptions) {
 		t.Errorf("GetDescriptionMap() = %#v, want %#v", got, wantDescriptions)

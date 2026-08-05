@@ -36,13 +36,13 @@ tags:
 tagalias:
   # (map[language-code]map[string]Array(string))
   en:
-    cms: [content management, content management system, docms, do cms]
+    cms: [content management, content management system, contentflow]
     ci/cd: [cicd, ci cd, ci-cd]
     localhost: [local]
     docli: [cli]
     pre-processing: [process, processing]
     fulltext: [fti, fulltext index, full text index, index, search, fulltext search, full text search]
-    do cms runtime: [runtime]
+    contentflow runtime: [runtime]
     metadata: [meta]
     maths: [math, mathematical, mathematics]
     chem: [chemical, chemistry]
@@ -51,13 +51,13 @@ tagalias:
     website: [site]
     code highlighting: [code, highlight, code highlight, highlighting]
   vi:
-    cms: [quản trị nội dung, hệ thống quản trị nội dung, quản lý nội dung, hệ thống quản lý nội dung, docms, do cms]
+    cms: [quản trị nội dung, hệ thống quản trị nội dung, quản lý nội dung, hệ thống quản lý nội dung, contentflow]
     ci/cd: [cicd, ci cd, ci-cd]
     localhost: [local]
     docli: [cli]
     tiền xử lý: [xử lý]
     toàn văn: [fti, fulltext index, full text index, index, tìm kiếm, tìm kiếm toàn văn, toàn văn, chỉ mục, chỉ mục toàn văn, toàn văn chỉ mục]
-    do cms runtime: [runtime]
+    contentflow runtime: [runtime]
     metadata: [meta]
     toán học: [toán]
     hoá học: [hoá]

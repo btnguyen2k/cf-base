@@ -220,10 +220,24 @@ func TestLoadSiteMetaFromTestData(t *testing.T) {
 	if got := aliases["en"]["cms"]; !reflect.DeepEqual(got, []string{
 		"content management",
 		"content management system",
-		"docms",
-		"do cms",
+		"contentflow",
 	}) {
 		t.Errorf("English cms aliases = %#v", got)
+	}
+	if got := aliases["en"]["contentflow runtime"]; !reflect.DeepEqual(got, []string{"runtime"}) {
+		t.Errorf("English ContentFlow runtime aliases = %#v", got)
+	}
+	if got := aliases["vi"]["cms"]; !reflect.DeepEqual(got, []string{
+		"quản trị nội dung",
+		"hệ thống quản trị nội dung",
+		"quản lý nội dung",
+		"hệ thống quản lý nội dung",
+		"contentflow",
+	}) {
+		t.Errorf("Vietnamese cms aliases = %#v", got)
+	}
+	if got := aliases["vi"]["contentflow runtime"]; !reflect.DeepEqual(got, []string{"runtime"}) {
+		t.Errorf("Vietnamese ContentFlow runtime aliases = %#v", got)
 	}
 	if got := aliases["vi"]["toàn văn"]; !reflect.DeepEqual(got, []string{
 		"fti",
