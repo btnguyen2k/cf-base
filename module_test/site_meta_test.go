@@ -159,6 +159,107 @@ func TestSiteMetaToMap(t *testing.T) {
 	}
 }
 
+func TestLoadSiteMetaFromTestData(t *testing.T) {
+	meta, err := cfbase.LoadSiteMetaFromYaml(filepath.Join("test_data", "meta.yaml"))
+	if err != nil {
+		t.Fatalf("LoadSiteMetaFromYaml() returned error: %v", err)
+	}
+
+	if meta.Name != "ContentFlow" {
+		t.Errorf("Name = %q, want ContentFlow", meta.Name)
+	}
+	if meta.Icon != "fas fa-code" {
+		t.Errorf("Icon = %q, want %q", meta.Icon, "fas fa-code")
+	}
+	if meta.DefaultLanguage != "en" {
+		t.Errorf("DefaultLanguage = %q, want en", meta.DefaultLanguage)
+	}
+	if meta.Mode != cfbase.DefaultSiteMode {
+		t.Errorf("Mode = %q, want %q", meta.Mode, cfbase.DefaultSiteMode)
+	}
+
+	wantLanguages := map[string]string{
+		"default": "en",
+		"en":      "English",
+		"vi":      "Tiếng Việt",
+	}
+	if !reflect.DeepEqual(meta.Languages, wantLanguages) {
+		t.Errorf("Languages = %#v, want %#v", meta.Languages, wantLanguages)
+	}
+
+	wantDescriptions := map[string]string{
+		"en": "Content Management System where its content is built through CI/CD pipeline",
+		"vi": "Hệ thống Quản trị nội dung với dữ liệu được xây dựng thông qua qui trình CI/CD",
+	}
+	if got := meta.GetDescriptionMap(); !reflect.DeepEqual(got, wantDescriptions) {
+		t.Errorf("GetDescriptionMap() = %#v, want %#v", got, wantDescriptions)
+	}
+
+	wantContacts := map[string]string{
+		"website":  "https://github.com/btnguyen2k/docms",
+		"email":    "btnguyen2k (at) gmail (dot) com",
+		"github":   "https://github.com/btnguyen2k/",
+		"linkedin": "https://www.linkedin.com/in/btnguyen2k/",
+	}
+	if !reflect.DeepEqual(meta.Contacts, wantContacts) {
+		t.Errorf("Contacts = %#v, want %#v", meta.Contacts, wantContacts)
+	}
+
+	if got := meta.Tags["build"]; got != "${build_datetime}" {
+		t.Errorf("Tags[build] = %#v, want %q", got, "${build_datetime}")
+	}
+	demo, ok := meta.Tags["demo"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("Tags[demo] has type %T, want map[string]interface{}", meta.Tags["demo"])
+	}
+	if got := demo["tag3"]; got != "this tag _content_ has **markdown**" {
+		t.Errorf("Tags[demo][tag3] = %#v", got)
+	}
+
+	aliases := meta.GetTagAliasMap()
+	if got := aliases["en"]["cms"]; !reflect.DeepEqual(got, []string{
+		"content management",
+		"content management system",
+		"docms",
+		"do cms",
+	}) {
+		t.Errorf("English cms aliases = %#v", got)
+	}
+	if got := aliases["vi"]["toàn văn"]; !reflect.DeepEqual(got, []string{
+		"fti",
+		"fulltext index",
+		"full text index",
+		"index",
+		"tìm kiếm",
+		"tìm kiếm toàn văn",
+		"toàn văn",
+		"chỉ mục",
+		"chỉ mục toàn văn",
+		"toàn văn chỉ mục",
+	}) {
+		t.Errorf("Vietnamese full-text aliases = %#v", got)
+	}
+
+	asMap := meta.ToMap()
+	if got := asMap["description"]; !reflect.DeepEqual(got, wantDescriptions) {
+		t.Errorf("ToMap()[description] = %#v, want %#v", got, wantDescriptions)
+	}
+	author, ok := asMap["author"].(*cfbase.Author)
+	if !ok || author != nil {
+		t.Errorf("ToMap()[author] = %#v, want a nil *Author", asMap["author"])
+	}
+}
+
+func TestLoadSiteMetaAutoFromTestData(t *testing.T) {
+	meta, err := cfbase.LoadSiteMetaAuto("test_data")
+	if err != nil {
+		t.Fatalf("LoadSiteMetaAuto() returned error: %v", err)
+	}
+	if meta.Name != "ContentFlow" {
+		t.Fatalf("Name = %q, want ContentFlow", meta.Name)
+	}
+}
+
 func TestLoadSiteMeta(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -233,9 +334,6 @@ contacts:
 			}
 			if meta.Tags == nil || len(meta.Tags) != 0 {
 				t.Errorf("Tags = %#v, want initialized empty map", meta.Tags)
-			}
-			if meta.FileInfo == nil || meta.FileInfo.Name() != filepath.Base(path) {
-				t.Errorf("FileInfo = %#v, want file info for %q", meta.FileInfo, path)
 			}
 		})
 	}

@@ -1,6 +1,6 @@
 package cfbase
 
-// Author is site's/document's author
+// Author describes the author of a site or document.
 type Author struct {
 	// Name is the author's display name.
 	Name string `json:"name" yaml:"name"`

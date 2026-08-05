@@ -11,19 +11,30 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// SiteMeta captures metadata of the website.
+// SiteMeta describes a website.
 type SiteMeta struct {
-	fileInfo        os.FileInfo       `json:"-" yaml:"-"`                                   // internal use only!
-	Name            string            `json:"name" yaml:"name"`                             // name of the website
-	Description     any               `json:"description" yaml:"description"`               // short description, can be a single string, or a map[language-code:string]string
-	Languages       map[string]string `json:"languages" yaml:"languages"`                   // available languages of the website content
-	DefaultLanguage string            `json:"-" yaml:"-"`                                   // site's default language
-	Icon            string            `json:"icon" yaml:"icon"`                             // website's icon
-	Contacts        map[string]string `json:"contacts,omitempty" yaml:"contacts,omitempty"` // site's contact info
-	Tags            map[string]any    `json:"tags,omitempty" yaml:"tags,omitempty"`         // site's tags
-	TagsAlias       any               `json:"tagalias,omitempty" yaml:"tagalias,omitempty"` // tags-alias, can be map[tag][]string or map[language-code]map[tag][]string
-	Mode            string            `json:"mode" yaml:"mode"`                             // site's mode, current support modes are: document/doc and blog
-	Author          *Author           `json:"author,omitempty" yaml:"author,omitempty"`     // site's author (also default document's author)
+	fileInfo os.FileInfo `json:"-" yaml:"-"`
+
+	// Name is the website name.
+	Name string `json:"name" yaml:"name"`
+	// Description is either a string or a map of language codes to descriptions.
+	Description any `json:"description" yaml:"description"`
+	// Languages maps available language codes to their display names.
+	Languages map[string]string `json:"languages" yaml:"languages"`
+	// DefaultLanguage is the resolved default language code.
+	DefaultLanguage string `json:"-" yaml:"-"`
+	// Icon is the location of the website icon.
+	Icon string `json:"icon" yaml:"icon"`
+	// Contacts contains the website's contact details.
+	Contacts map[string]string `json:"contacts,omitempty" yaml:"contacts,omitempty"`
+	// Tags contains arbitrary website metadata.
+	Tags map[string]any `json:"tags,omitempty" yaml:"tags,omitempty"`
+	// TagsAlias contains aliases by tag, optionally grouped by language code.
+	TagsAlias any `json:"tagalias,omitempty" yaml:"tagalias,omitempty"`
+	// Mode is the website mode, such as document or blog.
+	Mode string `json:"mode" yaml:"mode"`
+	// Author is the website's author and the default author for its documents.
+	Author *Author `json:"author,omitempty" yaml:"author,omitempty"`
 }
 
 func (sm *SiteMeta) init() error {
@@ -78,7 +89,7 @@ func (sm *SiteMeta) init() error {
 	return nil
 }
 
-// ToMap returns the site metadata as a map.
+// ToMap returns a map representation of the site metadata.
 func (sm *SiteMeta) ToMap() map[string]any {
 	return map[string]any{
 		"name":            sm.Name,
@@ -144,7 +155,7 @@ func (sm *SiteMeta) GetTagAliasMap() map[string]map[string][]string {
 	return empty
 }
 
-// LoadSiteMetaAuto loads metadata from meta.yaml, meta.yml, or meta.json in dir.
+// LoadSiteMetaAuto loads the first available meta.yaml, meta.yml, or meta.json file in dir.
 func LoadSiteMetaAuto(dir string) (*SiteMeta, error) {
 	yamlFiles := []string{dir + "/meta.yaml", dir + "/meta.yml"}
 	for _, yamlFilePath := range yamlFiles {

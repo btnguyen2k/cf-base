@@ -12,18 +12,26 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// TopicMeta capture metadata of a topic.
+// TopicMeta describes a topic and its presentation metadata.
 type TopicMeta struct {
-	fileInfo    os.FileInfo `json:"-" yaml:"-"`                                         // internal use only!
-	index       int         `json:"-" yaml:"-"`                                         // topic index, for ordering
-	id          string      `json:"-" yaml:"-"`                                         // topic id
-	dir         string      `json:"-" yaml:"-"`                                         // name of directory where topic's data locates
-	numDocs     int         `json:"-" yaml:"-"`                                         // number of documents in this topic
-	Title       interface{} `json:"title" yaml:"title"`                                 // topic's title, can be a single string, or a map[language-code:string]string
-	Description interface{} `json:"description,omitempty" yaml:"description,omitempty"` // short description, can be a single string, or a map[language-code:string]string
-	Icon        string      `json:"icon,omitempty" yaml:"icon,omitempty"`               // topic's icon
-	EntryImage  string      `json:"img,omitempty" yaml:"img,omitempty"`                 // topic's entry image
-	Hidden      bool        `json:"hidden,omitempty" yaml:"hidden,omitempty"`           // if 'true', this topic is "hidden" from GUI
+	fileInfo os.FileInfo `json:"-" yaml:"-"`
+	index    int         `json:"-" yaml:"-"`
+	id       string      `json:"-" yaml:"-"`
+	dir      string      `json:"-" yaml:"-"`
+	numDocs  int         `json:"-" yaml:"-"`
+
+	// DefaultLanguage is the default language inherited from the containing site.
+	DefaultLanguage string `json:"def_lang" yaml:"def_lang"`
+	// Title is either a string or a map of language codes to titles.
+	Title interface{} `json:"title" yaml:"title"`
+	// Description is either a string or a map of language codes to descriptions.
+	Description interface{} `json:"description,omitempty" yaml:"description,omitempty"`
+	// Icon is the location of the topic icon.
+	Icon string `json:"icon,omitempty" yaml:"icon,omitempty"`
+	// EntryImage is the location of the topic's entry image.
+	EntryImage string `json:"img,omitempty" yaml:"img,omitempty"`
+	// Hidden indicates whether the topic is hidden from the user interface.
+	Hidden bool `json:"hidden,omitempty" yaml:"hidden,omitempty"`
 }
 
 func (tm *TopicMeta) setDirectory(dir string) bool {
@@ -37,7 +45,7 @@ func (tm *TopicMeta) setDirectory(dir string) bool {
 	return true
 }
 
-// ToMap returns the topic metadata as a map.
+// ToMap returns a map representation of the topic metadata.
 func (tm *TopicMeta) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"id":          tm.id,
@@ -51,12 +59,12 @@ func (tm *TopicMeta) ToMap() map[string]interface{} {
 }
 
 // GetDescriptionMap returns the topic description keyed by language code.
-func (tm *TopicMeta) GetDescriptionMap(defaultLang string) map[string]string {
+func (tm *TopicMeta) GetDescriptionMap() map[string]string {
 	desc := make(map[string]string)
 	if tm.Description != nil {
 		switch reflect.TypeOf(tm.Description).Kind() {
 		case reflect.String:
-			desc[defaultLang] = fmt.Sprintf("%s", tm.Description)
+			desc[tm.DefaultLanguage] = fmt.Sprintf("%s", tm.Description)
 		case reflect.Map:
 			temp, err := reddo.Convert(tm.Description, _typMapString)
 			if err == nil && temp != nil {
@@ -68,12 +76,12 @@ func (tm *TopicMeta) GetDescriptionMap(defaultLang string) map[string]string {
 }
 
 // GetTitleMap returns the topic title keyed by language code.
-func (tm *TopicMeta) GetTitleMap(defaultLang string) map[string]string {
+func (tm *TopicMeta) GetTitleMap() map[string]string {
 	title := make(map[string]string)
 	if tm.Title != nil {
 		switch reflect.TypeOf(tm.Title).Kind() {
 		case reflect.String:
-			title[defaultLang] = fmt.Sprintf("%s", tm.Title)
+			title[tm.DefaultLanguage] = fmt.Sprintf("%s", tm.Title)
 		case reflect.Map:
 			temp, err := reddo.Convert(tm.Title, _typMapString)
 			if err == nil && temp != nil {
@@ -84,7 +92,7 @@ func (tm *TopicMeta) GetTitleMap(defaultLang string) map[string]string {
 	return title
 }
 
-// LoadTopicMetaAuto loads metadata from meta.yaml, meta.yml, or meta.json in dir.
+// LoadTopicMetaAuto loads the first available meta.yaml, meta.yml, or meta.json file in dir.
 func LoadTopicMetaAuto(dir string) (*TopicMeta, error) {
 	yamlFiles := []string{dir + "/meta.yaml", dir + "/meta.yml"}
 	for _, yamlFilePath := range yamlFiles {
@@ -124,11 +132,15 @@ func LoadTopicMetaFromYaml(filePath string) (*TopicMeta, error) {
 		return nil, err
 	}
 	var metadata *TopicMeta
-	err = yaml.Unmarshal(buf, &metadata)
-	if err == nil {
-		metadata.fileInfo = fi
+	if err := yaml.Unmarshal(buf, &metadata); err != nil {
+		return nil, err
 	}
-	return metadata, err
+	if metadata == nil {
+		return nil, fmt.Errorf("topic metadata file %q is empty or null", filePath)
+	}
+
+	metadata.fileInfo = fi
+	return metadata, nil
 }
 
 // LoadTopicMetaFromJson loads topic metadata from a JSON file.
@@ -142,9 +154,13 @@ func LoadTopicMetaFromJson(filePath string) (*TopicMeta, error) {
 		return nil, err
 	}
 	var metadata *TopicMeta
-	err = json.Unmarshal(buf, &metadata)
-	if err == nil {
-		metadata.fileInfo = fi
+	if err := json.Unmarshal(buf, &metadata); err != nil {
+		return nil, err
 	}
-	return metadata, err
+	if metadata == nil {
+		return nil, fmt.Errorf("topic metadata file %q is empty or null", filePath)
+	}
+
+	metadata.fileInfo = fi
+	return metadata, nil
 }
