@@ -13,8 +13,8 @@ components.
 
 ## Highlighted Features
 
-- Write content in Markdown
-- No database backend
-- Developer friendly
-- Full-text search
-- Multi-language support
+- **Markdown** is a simple yet powerful markup language for creating formatted text. ContentFlow supports [GitHub Flavored Markdown](https://github.github.com/gfm/) as well as extensions such as Mathematical and Chemical formulas.
+- **No Database** - website content is rendered from static data - which is Markdown text. Hence ContentFlow needs no database to run, and it is blazing fast.
+- **Developer Friendly** - authoring website content is as similar as pushing code, making pull requests, builds, packages and deploying.
+- **Fulltext Search** - website content is fulltext indexed and searchable.
+- **Multi-languages** - multi-language website content is support, switching languages is on-the-fly.
