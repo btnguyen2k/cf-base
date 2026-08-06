@@ -22,15 +22,15 @@ type DocumentMeta struct {
 	// DefaultLanguage is the default language inherited from the containing site.
 	DefaultLanguage string `json:"def_lang" yaml:"def_lang"`
 	// Title is either a string or a map of language codes to titles.
-	Title interface{} `json:"title" yaml:"title"`
+	Title any `json:"title" yaml:"title"`
 	// Summary is either a string or a map of language codes to summaries.
-	Summary interface{} `json:"summary,omitempty" yaml:"summary,omitempty"`
+	Summary any `json:"summary,omitempty" yaml:"summary,omitempty"`
 	// Icon is the location of the document icon.
 	Icon string `json:"icon,omitempty" yaml:"icon,omitempty"`
 	// ContentFile is either a filename or a map of language codes to filenames.
-	ContentFile interface{} `json:"file" yaml:"file"`
+	ContentFile any `json:"file" yaml:"file"`
 	// Tags is either a tag list or a map of language codes to tag lists.
-	Tags interface{} `json:"tags,omitempty" yaml:"tags,omitempty"`
+	Tags any `json:"tags,omitempty" yaml:"tags,omitempty"`
 	// EntryImage is the location of the document's entry image.
 	EntryImage string `json:"img,omitempty" yaml:"img,omitempty"`
 	// DocPage identifies a special site page, such as contact or about.
@@ -63,6 +63,7 @@ func (dm *DocumentMeta) ToMap() map[string]any {
 		"icon":    dm.Icon,
 		"title":   dm.GetTitleMap(),
 		"summary": dm.GetSummaryMap(),
+		"file":    dm.GetContentFileMap(),
 		"tags":    dm.GetTagsMap(),
 		"img":     dm.EntryImage,
 		"page":    dm.DocPage,
@@ -173,7 +174,7 @@ func LoadDocumentMetaAuto(dir string) (*DocumentMeta, error) {
 		return documentMeta, nil
 	}
 
-	return nil, fmt.Errorf("no meta file found")
+	return nil, fmt.Errorf("no meta file found at '%s', '%s' or '%s'", yamlFiles[0], yamlFiles[1], jsonFiles[0])
 }
 
 // LoadDocumentMetaFromYaml loads document metadata from a YAML file.

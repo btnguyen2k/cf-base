@@ -118,7 +118,7 @@ func LoadTopicMetaAuto(dir string) (*TopicMeta, error) {
 		return topicMeta, nil
 	}
 
-	return nil, fmt.Errorf("no meta file found")
+	return nil, fmt.Errorf("no meta file found at '%s', '%s' or '%s'", yamlFiles[0], yamlFiles[1], jsonFiles[0])
 }
 
 // LoadTopicMetaFromYaml loads topic metadata from a YAML file.

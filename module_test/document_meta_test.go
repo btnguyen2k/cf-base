@@ -122,6 +122,7 @@ func TestDocumentMetaToMap(t *testing.T) {
 		Title:           "What it is",
 		Summary:         "Introduction",
 		Icon:            "document.svg",
+		ContentFile:     "index.md",
 		Tags:            []string{"cms"},
 		EntryImage:      "entry.png",
 		DocPage:         "about",
@@ -135,6 +136,7 @@ func TestDocumentMetaToMap(t *testing.T) {
 		"icon":    "document.svg",
 		"title":   map[string]string{"en": "What it is"},
 		"summary": map[string]string{"en": "Introduction"},
+		"file":    map[string]string{"en": "index.md"},
 		"tags":    map[string][]string{"en": {"cms"}},
 		"img":     "entry.png",
 		"page":    "about",
@@ -202,6 +204,9 @@ func TestLoadDocumentMetaFromTestData(t *testing.T) {
 	}
 	if got := asMap["summary"]; !reflect.DeepEqual(got, wantSummaries) {
 		t.Errorf("ToMap()[summary] = %#v, want %#v", got, wantSummaries)
+	}
+	if got := asMap["file"]; !reflect.DeepEqual(got, wantFiles) {
+		t.Errorf("ToMap()[file] = %#v, want %#v", got, wantFiles)
 	}
 	if got := asMap["tags"]; !reflect.DeepEqual(got, wantTags) {
 		t.Errorf("ToMap()[tags] = %#v, want %#v", got, wantTags)
