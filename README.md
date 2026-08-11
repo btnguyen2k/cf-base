@@ -1,4 +1,6 @@
-# cf-base
+[![Actions Status](https://github.com/btnguyen2k/cf-base/workflows/ci/badge.svg)](https://github.com/btnguyen2k/cf-base/actions)
+[![codecov](https://codecov.io/gh/btnguyen2k/cf-base/graph/badge.svg?token=HdvpHgjjvy)](https://codecov.io/gh/btnguyen2k/cf-base)
+[![Release](https://img.shields.io/github/release/btnguyen2k/cf-base.svg?style=flat-square)](RELEASE-NOTES.md)
 
 ContentFlow is a Content Management System for developers and technical writers.
 Instead of relying on a GUI to create, publish, and update website content, it
